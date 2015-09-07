@@ -1,0 +1,30 @@
+---
+- name: install packages
+  homebrew: state=latest update_homebrew=yes name=
+  with_items:
+    - git
+    - zsh
+    - mercurial
+    - bzr
+
+- name: install apps
+  homebrew_cask: state=present name=
+  with_items:
+    - google-chrome
+    - rubymine
+    - clion
+    - vlc
+    - pycharm-ce
+    - intellij-idea-ce
+    - microsoft-office-365
+    - atom
+
+- name: get default shell
+  shell: 'echo $SHELL'
+  register: default_shell
+  changed_when: False
+  sudo: no
+
+- name: ensure zsh is the default shell
+  shell:  chsh -s /usr/local/bin/zsh
+  when: default_shell.stdout.find('/usr/local/bin/zsh') == -1

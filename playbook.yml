@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  connection: local
+
+  # the target user Ansible will impersonate when provisioning
+  user: vongrippen
+  sudo: true
+  vars:
+    user: vongrippen
+  roles:
+    - base
+    - { role: ubuntu, when: ansible_distribution == 'Ubuntu' }
+    - { role: mac, when: ansible_os_family == 'Darwin' }

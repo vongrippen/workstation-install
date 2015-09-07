@@ -1,0 +1,54 @@
+---
+- name: add repositories for additional packages
+  apt_repository: repo=
+  with_items:
+    - 'ppa:webupd8team/java'
+    - 'ppa:zeal-developers/ppa'
+
+- name: accept Java EULA
+  debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+
+- name: ensure required pacakages are installed
+  apt: pkg=
+  with_items:
+    - zsh
+    - tmux
+    - vim-gtk
+    - ssh
+    - ruby
+    - ruby-dev
+    - rubygems
+    - git
+    - bzr
+    - mercurial
+    - build-essential
+    - bison
+    - wget
+    - curl
+    - python-software-properties
+    - zeal
+    - oracle-java8-installer
+    - oracle-java8-set-default
+
+- name: get default shell
+  shell: 'echo $SHELL'
+  register: default_shell
+  changed_when: False
+  sudo: no
+
+- name: ensure zsh is the default shell
+  shell:  chsh -s /bin/zsh
+  when: default_shell.stdout.find('/bin/zsh') == -1
+
+- name: get docker path
+  shell: 'which docker'
+  register: usr_bin_docker
+  changed_when: False
+  sudo: no
+
+- name: install docker
+  shell: wget -qO- https://get.docker.com/ | sh
+  when: usr_bin_docker.stdout.find('/usr/bin/docker') == -1
+
+- name: ensure {{ user }} is in the docker group
+  user: name={{ user }} append=yes groups=docker

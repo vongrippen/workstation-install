@@ -1,0 +1,20 @@
+---
+- name: install packages
+  apt: pkg=
+  with_items:
+    - zsh
+    - tmux
+    - vim-gtk
+    - ssh
+    - ruby
+    - ruby-dev
+    - rubygems
+    - git
+    - bzr
+    - mercurial
+    - build-essential
+    - bison
+
+- name: make zsh default if it not currently the default shell
+  shell:  chsh -s /bin/zsh
+  when: default_shell.stdout.find('/bin/zsh') == -1
