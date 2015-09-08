@@ -4,6 +4,8 @@
   with_items:
     - 'ppa:webupd8team/java'
     - 'ppa:zeal-developers/ppa'
+    - 'ppa:privacyidea/privacyidea'
+    - 'ppa:yubico/stable'
 
 - name: accept Java EULA
   debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
@@ -29,6 +31,19 @@
     - zeal
     - oracle-java8-installer
     - oracle-java8-set-default
+    - gnupg
+    - gnupg-agent
+    - gpgsm
+    - yubikey-luks
+    - yubikey-personalization
+    - yubikey-personalization-gui
+    - yubikey-neo-manager
+    - yubico-piv-tool
+    - ykneomgr
+    - yubikey-piv-manager
+    - libyubikey-dev
+    - libyubikey0
+
 
 - name: get default shell
   shell: 'echo $SHELL'
