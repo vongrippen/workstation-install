@@ -6,6 +6,7 @@
     - zsh
     - mercurial
     - bzr
+    - caskroom/cask/brew-cask
 
 - name: install apps
   homebrew_cask: state=present name=
@@ -18,6 +19,16 @@
     - intellij-idea-ce
     - microsoft-office-365
     - atom
+    - hipchat
+    - slack
+    - iterm2
+    - virtualbox
+    - vmware-fusion
+    - gpgtools
+    - github-desktop
+    - sourcetree
+    - firefox
+    - android-studio
 
 - name: get default shell
   shell: 'echo $SHELL'
