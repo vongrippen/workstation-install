@@ -1,12 +1,34 @@
 ---
+- name: get brew path
+  shell: 'which brew'
+  register: usr_local_bin_brew
+  changed_when: False
+  sudo: no
+
+- name: install homebrew
+  shell: ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  when: usr_local_bin_brew.stdout.find('/usr/local/bin/brew') == -1
+
 - name: install packages
   homebrew: state=latest update_homebrew=yes name=
   with_items:
     - git
     - zsh
     - mercurial
-    - bzr
+    - bazaar
     - caskroom/cask/brew-cask
+    - postgresql
+    - memcached
+    - redis
+    - go
+    - elixir
+    - hub
+    - ssh-copy-id
+    - libyubikey
+    - yubico-piv-tool
+    - ykpers
+    - ykclient
+
 
 - name: install apps
   homebrew_cask: state=present name=
@@ -29,6 +51,10 @@
     - sourcetree
     - firefox
     - android-studio
+    - yubico-manager
+    - yubikey-neo-manager
+    - yubikey-personalization-gui
+    - yubikey-piv-manager
 
 - name: get default shell
   shell: 'echo $SHELL'
