@@ -55,15 +55,34 @@
   shell:  chsh -s /bin/zsh
   when: default_shell.stdout.find('/bin/zsh') == -1
 
-- name: get docker path
-  shell: 'which docker'
-  register: usr_bin_docker
-  changed_when: False
-  sudo: no
+- stat: path=/usr/bin/docker
+  register: docker
 
 - name: install docker
   shell: wget -qO- https://get.docker.com/ | sh
-  when: usr_bin_docker.stdout.find('/usr/bin/docker') == -1
+  when: docker.stat.exists == False
 
 - name: ensure {{ user }} is in the docker group
   user: name={{ user }} append=yes groups=docker
+
+- stat: path=/opt/clion
+  register: clion
+
+- name: install clion 1.1.1
+  sudo: True
+  unarchive: src=https://download.jetbrains.com/cpp/clion-1.1.1.tar.gz dest=/opt/clion copy=no
+  file: path=/opt/clion owner={{ user }} recurse=yes
+  copy: src=shared/jetbrains-clion.desktop dest=/usr/share/applications/jetbrains-clion.desktop
+  shell: xdg-desktop-menu forceupdate
+  when: clion.stat.exists == False
+
+- stat: path=/opt/rubymine
+  register: rubymine
+
+- name: install rubymine 7.1.4
+  sudo: True
+  unarchive: src=https://download.jetbrains.com/ruby/RubyMine-7.1.4.tar.gz dest=/opt/rubymine copy=no
+  file: path=/opt/rubymine owner={{ user }} recurse=yes
+  copy: src=shared/jetbrains-rubymine.desktop dest=/usr/share/applications/jetbrains-rubymine.desktop
+  shell: xdg-desktop-menu forceupdate
+  when: rubymine.stat.exists == False
