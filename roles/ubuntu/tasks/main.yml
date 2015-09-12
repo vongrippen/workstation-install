@@ -1,6 +1,6 @@
 ---
 - name: add repositories for additional packages
-  apt_repository: repo=
+  apt_repository: repo={{ item }} state=present
   with_items:
     - 'ppa:webupd8team/java'
     - 'ppa:zeal-developers/ppa'
@@ -11,15 +11,14 @@
   debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
 
 - name: ensure required pacakages are installed
-  apt: pkg=
+  apt: pkg={{ item }}
   with_items:
     - zsh
     - tmux
     - vim-gtk
     - ssh
-    - ruby
+    - ruby-full
     - ruby-dev
-    - rubygems
     - git
     - bzr
     - mercurial
@@ -71,9 +70,18 @@
 - name: install clion 1.1.1
   sudo: True
   unarchive: src=https://download.jetbrains.com/cpp/clion-1.1.1.tar.gz dest=/opt/clion copy=no
-  file: path=/opt/clion owner={{ user }} recurse=yes
-  copy: src=shared/jetbrains-clion.desktop dest=/usr/share/applications/jetbrains-clion.desktop
-  shell: xdg-desktop-menu forceupdate
+  when: clion.stat.exists == False
+
+- file: path=/opt/clion owner={{ user }} recurse=yes
+  sudo: True
+  when: clion.stat.exists == False
+
+- copy: src=ubuntu/shared/jetbrains-clion.desktop dest=/usr/share/applications/jetbrains-clion.desktop
+  sudo: True
+  when: clion.stat.exists == False
+
+- shell: xdg-desktop-menu forceupdate
+  sudo: True
   when: clion.stat.exists == False
 
 - stat: path=/opt/rubymine
@@ -81,8 +89,17 @@
 
 - name: install rubymine 7.1.4
   sudo: True
+  when: rubymine.stat.exists == False
   unarchive: src=https://download.jetbrains.com/ruby/RubyMine-7.1.4.tar.gz dest=/opt/rubymine copy=no
-  file: path=/opt/rubymine owner={{ user }} recurse=yes
-  copy: src=shared/jetbrains-rubymine.desktop dest=/usr/share/applications/jetbrains-rubymine.desktop
-  shell: xdg-desktop-menu forceupdate
+
+- file: path=/opt/rubymine owner={{ user }} recurse=yes
+  sudo: True
+  when: rubymine.stat.exists == False
+
+- copy: src=ubuntu/shared/jetbrains-rubymine.desktop dest=/usr/share/applications/jetbrains-rubymine.desktop
+  sudo: True
+  when: rubymine.stat.exists == False
+
+- shell: xdg-desktop-menu forceupdate
+  sudo: True
   when: rubymine.stat.exists == False

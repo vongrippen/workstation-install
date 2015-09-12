@@ -16,7 +16,8 @@ Mac OS X Installation
 
 Ubuntu Installation
 -------------------
-  apt-get install ansible
+  apt-get install python-pip
+  pip install ansible
 
 Run the Playbook
 ----------------

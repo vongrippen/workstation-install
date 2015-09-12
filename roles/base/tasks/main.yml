@@ -3,15 +3,15 @@
   file: path=~/Development state=directory
 
 - name: configure local git
-  template: src=base/templates/gitconfig dest=~/.gitconfig
+  template: src=gitconfig dest=~/.gitconfig
 
 
 - name: clone dotfiles repo
   git: repo=https://github.com/vongrippen/dotfiles.git dest=~/Development/dotfiles
 
-- name: setup shell envrionment
-  expect:
-    chdir: ~/Development/dotfiles
-    command: rake install
-    responses:
-      (.*): "y"
+# - name: setup shell envrionment
+#   expect:
+#     chdir: ~/Development/dotfiles
+#     command: rake install
+#     responses:
+#       (.*): "y"
