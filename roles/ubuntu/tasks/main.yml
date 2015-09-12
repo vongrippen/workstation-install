@@ -64,42 +64,48 @@
 - name: ensure {{ user }} is in the docker group
   user: name={{ user }} append=yes groups=docker
 
-- stat: path=/opt/clion
-  register: clion
+- get_url: url=https://download.jetbrains.com/cpp/clion-1.1.1.tar.gz dest=/tmp/clion.tgz validate_certs=False
 
 - name: install clion 1.1.1
   sudo: True
-  unarchive: src=https://download.jetbrains.com/cpp/clion-1.1.1.tar.gz dest=/opt/clion copy=no
-  when: clion.stat.exists == False
+  unarchive: src=/tmp/clion.tgz dest=/opt copy=no
+
+- name: stat clion-1.1.1
+  stat: path=/opt/clion-1.1.1
+  register: clion
+
+- name: Move clion-1.1.1 to clion
+  command: mv /opt/clion-1.1.1 /opt/clion
+  when: clion.stat.exists
 
 - file: path=/opt/clion owner={{ user }} recurse=yes
   sudo: True
-  when: clion.stat.exists == False
 
-- copy: src=ubuntu/shared/jetbrains-clion.desktop dest=/usr/share/applications/jetbrains-clion.desktop
+- copy: src=jetbrains-clion.desktop dest=/usr/share/applications/jetbrains-clion.desktop
   sudo: True
-  when: clion.stat.exists == False
 
 - shell: xdg-desktop-menu forceupdate
   sudo: True
-  when: clion.stat.exists == False
 
-- stat: path=/opt/rubymine
-  register: rubymine
+- get_url: url=https://download.jetbrains.com/ruby/RubyMine-7.1.4.tar.gz dest=/tmp/rubymine.tgz validate_certs=False
 
 - name: install rubymine 7.1.4
   sudo: True
-  when: rubymine.stat.exists == False
-  unarchive: src=https://download.jetbrains.com/ruby/RubyMine-7.1.4.tar.gz dest=/opt/rubymine copy=no
+  unarchive: src=/tmp/rubymine.tgz dest=/opt copy=no
+
+- name: stat rubymine-7.1.4
+  stat: path=/opt/RubyMine-7.1.4
+  register: rubymine
+
+- name: Move rubymine-7.1.4 to rubymine
+  command: mv /opt/RubyMine-7.1.4 /opt/rubymine
+  when: rubymine.stat.exists
 
 - file: path=/opt/rubymine owner={{ user }} recurse=yes
   sudo: True
-  when: rubymine.stat.exists == False
 
-- copy: src=ubuntu/shared/jetbrains-rubymine.desktop dest=/usr/share/applications/jetbrains-rubymine.desktop
+- copy: src=jetbrains-rubymine.desktop dest=/usr/share/applications/jetbrains-rubymine.desktop
   sudo: True
-  when: rubymine.stat.exists == False
 
 - shell: xdg-desktop-menu forceupdate
   sudo: True
-  when: rubymine.stat.exists == False
