@@ -5,7 +5,6 @@
 - name: configure local git
   template: src=gitconfig dest=~/.gitconfig
 
-
 - name: clone dotfiles repo
   git: repo=https://github.com/vongrippen/dotfiles.git dest=~/Development/dotfiles
 

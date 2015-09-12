@@ -10,7 +10,7 @@
   when: usr_local_bin_brew.stdout.find('/usr/local/bin/brew') == -1
 
 - name: install packages
-  homebrew: state=latest update_homebrew=yes name=
+  homebrew: state=latest update_homebrew=yes name={{ item }}
   with_items:
     - git
     - zsh
@@ -31,7 +31,7 @@
 
 
 - name: install apps
-  homebrew_cask: state=present name=
+  homebrew_cask: state=present name={{ item }}
   with_items:
     - google-chrome
     - rubymine
