@@ -1,20 +1,17 @@
 ---
-- name: install packages
-  apt: pkg=
-  with_items:
-    - zsh
-    - tmux
-    - vim-gtk
-    - ssh
-    - ruby
-    - ruby-dev
-    - rubygems
-    - git
-    - bzr
-    - mercurial
-    - build-essential
-    - bison
+- name: ensure local development directory is setup
+  file: path=~/Development state=directory
 
-- name: make zsh default if it not currently the default shell
-  shell:  chsh -s /bin/zsh
-  when: default_shell.stdout.find('/bin/zsh') == -1
+- name: configure local git
+  template: src=base/templates/gitconfig dest=~/.gitconfig
+
+
+- name: clone dotfiles repo
+  git: repo=https://github.com/vongrippen/dotfiles.git dest=~/Development/dotfiles
+
+- name: setup shell envrionment
+  expect:
+    chdir: ~/Development/dotfiles
+    command: rake install
+    responses:
+      (.*): "y"

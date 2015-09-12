@@ -1,0 +1,5 @@
+[user]
+        name = Mike Cochran
+        email = mcochran@linux.com
+[push]
+        default = matching
